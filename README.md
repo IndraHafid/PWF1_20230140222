@@ -7,13 +7,24 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-![alt text](<Screenshot 2026-03-07 104004.png>)
-![alt text](<Screenshot 2026-02-28 092147.png>)
-![alt text](<Screenshot 2026-02-28 081314.png>)
-![alt text](<Screenshot 2026-02-28 082836.png>)
-
+Screenshot Pertemuan-1 (PRAK_PWF)
+---
 <img width="1919" height="969" alt="Screenshot 2026-02-21 111723" src="https://github.com/user-attachments/assets/a52e69fa-0137-4987-a67b-52843565383f" />
 
+Screenshot Pertemuan-2 (PRAK_PWF)
+---
+*Register*
+![alt text](<Screenshot 2026-02-28 092147.png>)
+
+*Login*
+![alt text](<Screenshot 2026-02-28 081314.png>)
+
+*About*
+![alt text](<Screenshot 2026-02-28 082836.png>)
+
+Screenshot Pertemuan-3 (PRAK_PWF)
+---
+![alt text](<Screenshot 2026-03-07 104004.png>)
 
 ## About Laravel
 
