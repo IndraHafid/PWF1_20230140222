@@ -43,6 +43,12 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+        
+        // Manual policy check
+        $policy = new \App\Policies\ProductPolicy();
+        if (!$policy->update(auth()->user(), $product)) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -58,6 +64,12 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        // Manual policy check
+        $policy = new \App\Policies\ProductPolicy();
+        if (!$policy->update(auth()->user(), $product)) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $users = User::orderBy('name')->get();
         return view('product.edit', compact('product', 'users'));
     }
@@ -65,6 +77,13 @@ class ProductController extends Controller
     public function delete($id)
     {
         $product = Product::findOrFail($id);
+        
+        // Manual policy check
+        $policy = new \App\Policies\ProductPolicy();
+        if (!$policy->delete(auth()->user(), $product)) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $product->delete();
 
         return redirect()->route('product.index')->with('success', 'Product berhasil dihapus');
