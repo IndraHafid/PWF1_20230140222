@@ -65,13 +65,13 @@
                     <div class="rounded-lg border border-gray-200 divide-y">
 
                         <!-- Name -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Product Name</div>
                             <div class="font-semibold">{{ $product->name }}</div>
                         </div>
 
                         <!-- Quantity -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Quantity</div>
                             <div>
                                 <span class="px-2 py-1 rounded text-xs font-medium
@@ -83,7 +83,7 @@
                         </div>
 
                         <!-- Price -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Price</div>
                             <div class="font-mono">
                                 Rp {{ number_format($product->price, 0, ',', '.') }}
@@ -91,7 +91,7 @@
                         </div>
 
                         <!-- Owner -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Owner</div>
                             <div>
                                 {{ $product->user->name ?? '-' }}
@@ -99,7 +99,7 @@
                         </div>
 
                         <!-- Created At -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Created At</div>
                             <div>
                                 {{ $product->created_at->format('d M Y, H:i') }}
@@ -107,7 +107,7 @@
                         </div>
 
                         <!-- Updated At -->
-                        <div class="flex items-center px-5 py-4">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
                             <div class="w-1/3 text-sm text-gray-500">Updated At</div>
                             <div>
                                 {{ $product->updated_at->format('d M Y, H:i') }}

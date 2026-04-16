@@ -45,7 +45,7 @@
                             <input type="text" name="name"
                                    value="{{ old('name', $product->name) }}"
                                    placeholder="e.g. Wireless Headphones"
-                                   class="w-full px-4 py-2.5 rounded-lg border text-sm
+                                   class="w-full px-4 py-2.5 rounded-lg border text-sm bg-gray-50 text-gray-900
                                    @error('name') border-red-400 @else border-gray-300 @enderror">
                             @error('name')
                                 <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
@@ -59,9 +59,9 @@
                                     Quantity <span class="text-red-500">*</span>
                                 </label>
                                 <input type="number" name="quantity"
-                                       value="{{ old('quantity', $product->quantity) }}"
+                                       value="{{ old('quantity', $product->qty) }}"
                                        min="0"
-                                       class="w-full px-4 py-2.5 rounded-lg border text-sm
+                                       class="w-full px-4 py-2.5 rounded-lg border text-sm bg-gray-50 text-gray-900
                                        @error('quantity') border-red-400 @else border-gray-300 @enderror">
                                 @error('quantity')
                                     <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
@@ -75,7 +75,7 @@
                                 <input type="number" name="price"
                                        value="{{ old('price', $product->price) }}"
                                        step="0.01"
-                                       class="w-full px-4 py-2.5 rounded-lg border text-sm
+                                       class="w-full px-4 py-2.5 rounded-lg border text-sm bg-gray-50 text-gray-900
                                        @error('price') border-red-400 @else border-gray-300 @enderror">
                                 @error('price')
                                     <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
@@ -89,7 +89,7 @@
                                 Owner <span class="text-red-500">*</span>
                             </label>
                             <select name="user_id"
-                                    class="w-full px-4 py-2.5 rounded-lg border text-sm
+                                    class="w-full px-4 py-2.5 rounded-lg border text-sm bg-gray-50 text-gray-900
                                     @error('user_id') border-red-400 @else border-gray-300 @enderror">
                                 <option value="">Select Owner</option>
                                 @foreach($users as $user)
@@ -111,7 +111,7 @@
                             <button type="submit"
                                     form="delete-product-form"
                                     onclick="return confirm('Are you sure you want to delete this product?')"
-                                    class="px-3 py-2 text-sm text-red-500 hover:text-red-700">
+                                    class="px-4 py-2 border rounded-lg text-sm text-red-600 hover:bg-gray-100">
                                 Delete Product
                             </button>
 
@@ -122,7 +122,7 @@
                                 </a>
 
                                 <button type="submit"
-                                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg">
+                                        class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">
                                     Update Product
                                 </button>
                             </div>
@@ -136,3 +136,92 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validasi untuk field quantity
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    if (quantityInput) {
+        quantityInput.addEventListener('input', function(e) {
+            // Hapus semua karakter non-angka
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Tampilkan pesan error jika ada input invalid
+            if (this.value && this.value !== this.value.replace(/[^0-9]/g, '')) {
+                showError(this, 'Input tidak valid. Hanya angka yang diperbolehkan pada field ini.');
+            } else {
+                hideError(this);
+            }
+        });
+        
+        quantityInput.addEventListener('keypress', function(e) {
+            // Mencegah input karakter non-angka
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char)) {
+                e.preventDefault();
+                showError(this, 'Input tidak valid. Hanya angka yang diperbolehkan pada field ini.');
+            }
+        });
+    }
+    
+    // Validasi untuk field price
+    const priceInput = document.querySelector('input[name="price"]');
+    if (priceInput) {
+        priceInput.addEventListener('input', function(e) {
+            // Hapus semua karakter non-angka dan non-desimal
+            this.value = this.value.replace(/[^0-9.]/g, '');
+            
+            // Mencegah multiple decimal points
+            const decimalCount = (this.value.match(/\./g) || []).length;
+            if (decimalCount > 1) {
+                this.value = this.value.replace(/\.+$/, '');
+            }
+            
+            // Tampilkan pesan error jika ada input invalid
+            if (this.value && !/^[0-9]*\.?[0-9]*$/.test(this.value)) {
+                showError(this, 'Input tidak valid. Hanya angka dan desimal yang diperbolehkan pada field ini.');
+            } else {
+                hideError(this);
+            }
+        });
+        
+        priceInput.addEventListener('keypress', function(e) {
+            const char = String.fromCharCode(e.which);
+            // Allow numbers, decimal point, and backspace
+            if (!/[0-9.]/.test(char)) {
+                e.preventDefault();
+                showError(this, 'Input tidak valid. Hanya angka dan desimal yang diperbolehkan pada field ini.');
+            }
+        });
+    }
+    
+    function showError(input, message) {
+        // Remove existing error
+        hideError(input);
+        
+        // Create error element
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'mt-1.5 text-xs text-red-500 real-time-error';
+        errorDiv.textContent = message;
+        
+        // Insert error after input
+        input.parentNode.appendChild(errorDiv);
+        
+        // Add red border to input
+        input.classList.add('border-red-400');
+        input.classList.remove('border-gray-300');
+    }
+    
+    function hideError(input) {
+        // Remove existing error
+        const existingError = input.parentNode.querySelector('.real-time-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Restore normal border
+        input.classList.remove('border-red-400');
+        input.classList.add('border-gray-300');
+    }
+});
+</script>
