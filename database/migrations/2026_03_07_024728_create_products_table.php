@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id();
         $table->string('name');
         $table->integer('qty');
-        $table->decimal('price');
+        $table->decimal('price', 15, 2);
         
         $table->unsignedBigInteger('user_id');
         

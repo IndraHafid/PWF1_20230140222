@@ -64,6 +64,28 @@ Log::info('Product store validated data:', $request->validated());
         return view('product.view', compact('product'));
     }
 
+    public function showJson($id)
+    {
+        $product = Product::with('user')->findOrFail($id);
+        
+        // Check permissions
+        $policy = new \App\Policies\ProductPolicy();
+        
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'qty' => $product->qty,
+            'price' => $product->price,
+            'created_at' => $product->created_at,
+            'updated_at' => $product->updated_at,
+            'user' => [
+                'name' => $product->user->name ?? null,
+            ],
+            'can_update' => $policy->update(auth()->user(), $product),
+            'can_delete' => $policy->delete(auth()->user(), $product),
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);

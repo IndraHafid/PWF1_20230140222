@@ -38,7 +38,7 @@
                                 <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
-
+ 
                         <!-- Quantity & Price -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -124,13 +124,27 @@ document.addEventListener('DOMContentLoaded', function() {
         priceInput.addEventListener('input', function(e) {
             let value = this.value.replace(/[^0-9,.]/g, '');
             
-            // Parse Indonesian format: remove thousand dots, comma → dot decimal
-            value = value.replace(/\./g, '').replace(/,/g, '.');
+            // Handle Indonesian format properly
+            // Split by comma for decimal, then remove dots from thousand separator
+            if (value.includes(',')) {
+                const parts = value.split(',');
+                const integerPart = parts[0].replace(/\./g, '');
+                const decimalPart = parts[1] ? '.' + parts[1].replace(/\./g, '') : '';
+                value = integerPart + decimalPart;
+            } else {
+                // Remove dots from thousand separator
+                value = value.replace(/\./g, '');
+            }
             
             // Ensure only one decimal point
             const parts = value.split('.');
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            // Limit decimal places to 2
+            if (parts.length === 2 && parts[1].length > 2) {
+                value = parts[0] + '.' + parts[1].substring(0, 2);
             }
             
             this.value = value;

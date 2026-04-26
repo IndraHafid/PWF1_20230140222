@@ -32,31 +32,16 @@
                             $canUpdate = $policy->update(auth()->user(), $product);
                             @endphp
                             @if($canUpdate)
-                            <a href="{{ route('product.edit', $product) }}"
-                               class="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg border border-yellow-400"
-                               title="Edit">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </a>
+                            <x-edit-button :url="route('product.edit', $product)" title="Edit Product" />
                             @endif
 
                             @php
                             $canDelete = $policy->delete(auth()->user(), $product);
                             @endphp
                             @if($canDelete)
-                            <form action="{{ route('product.delete', $product->id) }}" method="POST"
-                                  onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-400"
-                                        title="Delete">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                </button>
-                            </form>
+                            <x-delete-button :url="route('product.delete', $product->id)" 
+                                            title="Delete Product" 
+                                            confirm-message="Are you sure you want to delete this product?" />
                             @endif
                         </div>
                     </div>
@@ -65,17 +50,17 @@
                     <div class="rounded-lg border border-gray-200 divide-y">
 
                         <!-- Name -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Product Name</div>
-                            <div class="font-semibold">{{ $product->name }}</div>
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Product Name</div>
+                            <div class="font-semibold text-gray-800 dark:text-white">{{ $product->name }}</div>
                         </div>
 
                         <!-- Quantity -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Quantity</div>
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Quantity</div>
                             <div>
                                 <span class="px-2 py-1 rounded text-xs font-medium
-                                    {{ $product->quantity > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                    {{ $product->quantity > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700' }}">
                                     {{ $product->quantity }}
                                     ({{ $product->quantity > 10 ? 'In Stock' : 'Low Stock' }})
                                 </span>
@@ -83,33 +68,33 @@
                         </div>
 
                         <!-- Price -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Price</div>
-                            <div class="font-mono">
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Price</div>
+                            <div class="font-mono text-gray-800 dark:text-white">
                                 Rp {{ number_format($product->price, 0, ',', '.') }}
                             </div>
                         </div>
 
                         <!-- Owner -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Owner</div>
-                            <div>
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Owner</div>
+                            <div class="text-gray-800 dark:text-white">
                                 {{ $product->user->name ?? '-' }}
                             </div>
                         </div>
 
                         <!-- Created At -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Created At</div>
-                            <div>
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Created At</div>
+                            <div class="text-gray-800 dark:text-white">
                                 {{ $product->created_at->format('d M Y, H:i') }}
                             </div>
                         </div>
 
                         <!-- Updated At -->
-                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-gray-100">
-                            <div class="w-1/3 text-sm text-gray-500">Updated At</div>
-                            <div>
+                        <div class="px-4 py-2 border rounded-lg text-sm text-grey-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                            <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Updated At</div>
+                            <div class="text-gray-800 dark:text-white">
                                 {{ $product->updated_at->format('d M Y, H:i') }}
                             </div>
                         </div>
