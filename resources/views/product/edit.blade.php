@@ -52,6 +52,26 @@
                             @enderror
                         </div>
 
+                        <!-- Category -->
+                        <div>
+                            <label class="block text-sm font-medium mb-1">
+                                Category <span class="text-red-500">*</span>
+                            </label>
+                            <select name="category_id" 
+                                    class="w-full px-4 py-2.5 rounded-lg border text-sm bg-gray-50 text-gray-900
+                                    @error('category_id') border-red-400 @else border-gray-300 @enderror">
+                                <option value="" style="color: #9CA3AF;">-- Pilih Kategori --</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Quantity & Price -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -139,89 +159,48 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Validasi untuk field quantity
+    const form = document.querySelector('form');
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
+        // Disable submit button to prevent double submission
+        submitButton.disabled = true;
+        submitButton.textContent = 'Updating...';
+        
+        // Re-enable after 3 seconds in case of errors
+        setTimeout(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Update Product';
+        }, 3000);
+    });
+    
+    // Simple input validation - only allow valid characters
     const quantityInput = document.querySelector('input[name="quantity"]');
     if (quantityInput) {
         quantityInput.addEventListener('input', function(e) {
-            // Hapus semua karakter non-angka
+            // Only allow numbers
             this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Tampilkan pesan error jika ada input invalid
-            if (this.value && this.value !== this.value.replace(/[^0-9]/g, '')) {
-                showError(this, 'Input tidak valid. Hanya angka yang diperbolehkan pada field ini.');
-            } else {
-                hideError(this);
-            }
-        });
-        
-        quantityInput.addEventListener('keypress', function(e) {
-            // Mencegah input karakter non-angka
-            const char = String.fromCharCode(e.which);
-            if (!/[0-9]/.test(char)) {
-                e.preventDefault();
-                showError(this, 'Input tidak valid. Hanya angka yang diperbolehkan pada field ini.');
-            }
         });
     }
     
-    // Validasi untuk field price
     const priceInput = document.querySelector('input[name="price"]');
     if (priceInput) {
         priceInput.addEventListener('input', function(e) {
-            // Hapus semua karakter non-angka dan non-desimal
+            // Only allow numbers and decimal point
             this.value = this.value.replace(/[^0-9.]/g, '');
             
-            // Mencegah multiple decimal points
-            const decimalCount = (this.value.match(/\./g) || []).length;
-            if (decimalCount > 1) {
-                this.value = this.value.replace(/\.+$/, '');
+            // Prevent multiple decimal points
+            const parts = this.value.split('.');
+            if (parts.length > 2) {
+                this.value = parts[0] + '.' + parts.slice(1).join('');
             }
             
-            // Tampilkan pesan error jika ada input invalid
-            if (this.value && !/^[0-9]*\.?[0-9]*$/.test(this.value)) {
-                showError(this, 'Input tidak valid. Hanya angka dan desimal yang diperbolehkan pada field ini.');
-            } else {
-                hideError(this);
+            // Limit to 2 decimal places
+            if (parts.length === 2 && parts[1].length > 2) {
+                this.value = parts[0] + '.' + parts[1].substring(0, 2);
             }
         });
-        
-        priceInput.addEventListener('keypress', function(e) {
-            const char = String.fromCharCode(e.which);
-            // Allow numbers, decimal point, and backspace
-            if (!/[0-9.]/.test(char)) {
-                e.preventDefault();
-                showError(this, 'Input tidak valid. Hanya angka dan desimal yang diperbolehkan pada field ini.');
-            }
-        });
-    }
-    
-    function showError(input, message) {
-        // Remove existing error
-        hideError(input);
-        
-        // Create error element
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'mt-1.5 text-xs text-red-500 real-time-error';
-        errorDiv.textContent = message;
-        
-        // Insert error after input
-        input.parentNode.appendChild(errorDiv);
-        
-        // Add red border to input
-        input.classList.add('border-red-400');
-        input.classList.remove('border-gray-300');
-    }
-    
-    function hideError(input) {
-        // Remove existing error
-        const existingError = input.parentNode.querySelector('.real-time-error');
-        if (existingError) {
-            existingError.remove();
-        }
-        
-        // Restore normal border
-        input.classList.remove('border-red-400');
-        input.classList.add('border-gray-300');
     }
 });
 </script>

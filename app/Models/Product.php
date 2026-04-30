@@ -12,7 +12,9 @@ class Product extends Model
         'name',
         'qty',
         'price',
-        'user_id'
+        'user_id',
+        'category_id',
+        'description'
     ];
 
     public function user(): BelongsTo
@@ -20,8 +22,8 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function categories(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(Category::class);
+        return $this->belongsTo(Category::class);
     }
 }

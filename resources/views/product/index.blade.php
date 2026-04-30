@@ -246,6 +246,20 @@
                                 <div class="font-semibold text-gray-800 dark:text-white" x-text="product?.name"></div>
                             </div>
                             
+                            <!-- Category -->
+                            <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                                <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Category</div>
+                                <div>
+                                    <span class="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 capitalize" x-text="product?.category || '-'"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                                <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Description</div>
+                                <div class="text-gray-800 dark:text-white text-sm" x-text="product?.description || 'No description'"></div>
+                            </div>
+                            
                             <!-- Quantity -->
                             <div class="px-4 py-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
                                 <div class="w-1/3 text-sm text-gray-500 dark:text-gray-400">Quantity</div>

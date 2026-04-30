@@ -32,5 +32,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('export-product', function ($user) {
             return $user->role === 'admin';
         });
+
+        // Gate untuk manage category (admin only)
+        Gate::define('manage-category', function ($user) {
+            return $user->role === 'admin';
+        });
     }
 }

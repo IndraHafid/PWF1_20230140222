@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
 
 class ProductController extends Controller
 {
@@ -19,7 +18,6 @@ class ProductController extends Controller
 
     public function store(\App\Http\Requests\StoreProductRequest $request)
     {
-Log::info('Product store validated data:', $request->validated());
         $validated = $request->validated();
 
         $validated['user_id'] = Auth::id();
@@ -32,41 +30,29 @@ Log::info('Product store validated data:', $request->validated());
             return redirect()
                 ->route('product.index')
                 ->with('success', 'Product created successfully.');
-        } catch (QueryException $e) {
-            Log::error('Product store database error', [
-                'message' => $e->getMessage(),
-            ]);
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Database error while creating product.');
         } catch (\Throwable $e) {
-            Log::error('Product store unexpected error', [
-                'message' => $e->getMessage(),
-            ]);
-
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Unexpected error occurred.');
+                ->with('error', 'Error creating product. Please try again.');
         }
     }
 
     public function create()
     {
-        return view('product.create');
+        $categories = Category::orderBy('name')->get();
+        return view('product.create', compact('categories'));
     }
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('category')->findOrFail($id);
         return view('product.view', compact('product'));
     }
 
     public function showJson($id)
     {
-        $product = Product::with('user')->findOrFail($id);
+        $product = Product::with(['user', 'category'])->findOrFail($id);
         
         // Check permissions
         $policy = new \App\Policies\ProductPolicy();
@@ -74,6 +60,8 @@ Log::info('Product store validated data:', $request->validated());
         return response()->json([
             'id' => $product->id,
             'name' => $product->name,
+            'category' => $product->category?->name ?? '-',
+            'description' => $product->description,
             'qty' => $product->qty,
             'price' => $product->price,
             'created_at' => $product->created_at,
@@ -101,6 +89,7 @@ Log::info('Product store validated data:', $request->validated());
             'quantity' => 'sometimes|integer',
             'price' => 'sometimes|numeric',
             'user_id' => 'sometimes|exists:users,id',
+            'category_id' => 'sometimes|exists:categories,id',
         ]);
 
         // Map quantity to qty for database
@@ -123,7 +112,8 @@ Log::info('Product store validated data:', $request->validated());
         }
         
         $users = User::orderBy('name')->get();
-        return view('product.edit', compact('product', 'users'));
+        $categories = Category::orderBy('name')->get();
+        return view('product.edit', compact('product', 'users', 'categories'));
     }
 
     public function delete($id)
@@ -138,6 +128,6 @@ Log::info('Product store validated data:', $request->validated());
         
         $product->delete();
 
-        return redirect()->route('product.index')->with('success', 'Product berhasil dihapus');
+        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
     }
 }
